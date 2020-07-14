@@ -131,6 +131,7 @@ public class NoteActivity extends AppCompatActivity {
         }
 
         Log.i(TAG, "mNotePosition: " + mNotePosition);
+
         mNote = DataManager.getInstance().getNotes().get(mNotePosition);
 
     }
