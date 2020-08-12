@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-NoteKeeperBlessingRecovery.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-NoteKeeperBlessingRecovery.iml" group="NoteKeeperBlessingRecovery" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/NoteKeeperBlessingRecovery.iml" filepath="$PROJECT_DIR$/.idea/modules/NoteKeeperBlessingRecovery.iml" group="NoteKeeperBlessingRecovery" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/NoteKeeperBlessingRecovery-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/NoteKeeperBlessingRecovery-app.iml" group="NoteKeeperBlessingRecovery/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="NoteKeeperBlessingRecovery/app" />
     </modules>
   </component>
