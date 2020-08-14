@@ -1,9 +1,11 @@
 package com.example.notekeeper;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -158,7 +160,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderCallbacks<C
         if (mIsCancelling) {
             Log.i(TAG, "Cancelling note at position: " + mNoteId);
             if (mIsNewNote) {
-                DataManager.getInstance().removeNote(mNoteId);
+                deleteNoteFromDatabase();
             } else {
                 storePreviousNoteValues();
             }
@@ -166,6 +168,21 @@ public class NoteActivity extends AppCompatActivity implements LoaderCallbacks<C
             saveNote();
         }
         Log.d(TAG, "onPause");
+    }
+
+    private void deleteNoteFromDatabase() {
+       final String selection = NoteInfoEntry._ID + " = ?";
+       final String[] selectionArgs = {Integer.toString(mNoteId)};
+
+        AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+                db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
+                return null;
+            }
+        };
+        task.execute();
     }
 
     private void storePreviousNoteValues() {
@@ -184,11 +201,40 @@ public class NoteActivity extends AppCompatActivity implements LoaderCallbacks<C
     }
 
     private void saveNote() {
-        // mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
-        // mNote.setTitle(mTextNoteTitle.getText().toString());
-        // mNote.setText(mTextNoteText.getText().toString());
+         String courseId = selectedCourseId();
+         String noteTitle = mTextNoteTitle.getText().toString();
+         String noteText = mTextNoteText.getText().toString();
+         saveNoteToDatabase(courseId, noteTitle, noteText);
     }
 
+    private String selectedCourseId() {
+        int selectedPosition = mSpinnerCourses.getSelectedItemPosition();
+        Cursor cursor = mAdapterCourses.getCursor();
+        cursor.moveToPosition(selectedPosition);
+        int courseIdPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
+        String courseId = cursor.getString(courseIdPos);
+        return courseId;
+    }
+
+    private void saveNoteToDatabase(String courseId, String noteTitle, String noteText) {
+       final String selection = NoteInfoEntry._ID + " = ?";
+       final String[] selectionArgs = {Integer.toString(mNoteId)};
+
+        final ContentValues values = new ContentValues();
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID,  courseId);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, noteTitle);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, noteText);
+
+        AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+                db.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);
+                return null;
+            }
+        };
+        task.execute();
+    }
     private void displayNote() {
         String courseId = mNoteCursor.getString(mCourseIdPos);
         String noteTitle = mNoteCursor.getString(mNoteTitlePos);
@@ -233,9 +279,20 @@ public class NoteActivity extends AppCompatActivity implements LoaderCallbacks<C
     }
 
     private void createNewNote() {
-        DataManager dm = DataManager.getInstance();
-        mNoteId = dm.createNewNote();
-//        mNote = dm.getNotes().get(mNotePosition);
+       final ContentValues values = new ContentValues();
+       values.put(NoteInfoEntry.COLUMN_COURSE_ID, "");
+       values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, "");
+       values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
+
+       AsyncTask task = new AsyncTask() {
+           @Override
+           protected Object doInBackground(Object[] objects) {
+               SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+               mNoteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
+               return null;
+           }
+       };
+       task.execute();
     }
 
     @Override
