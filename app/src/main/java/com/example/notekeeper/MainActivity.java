@@ -214,8 +214,7 @@ public class MainActivity extends AppCompatActivity
 
     private void handleShare() {
         View view = findViewById(R.id.list_items);
-        Snackbar.make(view, "Share to - " +
-                        PreferenceManager.getDefaultSharedPreferences(this).getString("user_favorite_social", ""),
+        Snackbar.make(view, "Share to - " + PreferenceManager.getDefaultSharedPreferences(this).getString("user_favorite_social", ""),
                 Snackbar.LENGTH_LONG).show();
     }
 

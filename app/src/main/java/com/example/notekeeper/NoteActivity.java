@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -26,8 +25,6 @@ import androidx.loader.content.Loader;
 
 import com.example.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
-
-import java.util.List;
 
 public class NoteActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
     public static final int LOADER_NOTES = 0;
